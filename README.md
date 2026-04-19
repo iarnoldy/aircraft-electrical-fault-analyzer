@@ -4,7 +4,7 @@ An intelligent aircraft electrical diagnostic system using Claude Agent SDK for 
 
 ## Demo
 
-Watch the full demo on YouTube: https://youtu.be/QjalMMSlL9Q
+Watch the full demo on YouTube: https://youtu.be/TM6NtLLu6C8
 
 ## Academic Attribution
 
