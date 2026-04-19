@@ -1,0 +1,2079 @@
+/* Aircraft Electrical Fault Analyzer - Main Stylesheet */
+
+/* ===== CSS Variables - Professional Aviation Design System ===== */
+:root {
+    /* Background Colors - Sophisticated Dark Theme */
+    --bg-primary: #0a1929;          /* Very dark blue-gray - main background */
+    --bg-secondary: #1a2332;        /* Panel background */
+    --bg-tertiary: #263545;         /* Lighter panel sections */
+    --bg-elevated: #2a3142;         /* Hover states, raised elements */
+
+    /* Accent Colors - Professional Teal Primary */
+    --accent-primary: #4ecdc4;      /* Professional teal - PRIMARY COLOR */
+    --accent-primary-hover: #6ee7df; /* Lighter teal for hover */
+    --accent-success: #10b981;      /* Success green */
+    --accent-warning: #f59e0b;      /* Warning amber */
+    --accent-danger: #ef4444;       /* Danger red */
+    --accent-info: #42a5f5;         /* Info blue */
+
+    /* Text Colors - High Contrast */
+    --text-primary: #f8fafc;        /* Primary text - light blue-white */
+    --text-secondary: #cbd5e1;      /* Secondary text - blue-gray */
+    --text-muted: #94a3b8;          /* Muted text - subdued */
+    --text-disabled: #64748b;       /* Disabled state */
+
+    /* Border Colors */
+    --border-color: #334155;        /* Default border */
+    --border-hover: #475569;        /* Hover border */
+    --shadow-color: rgba(0, 0, 0, 0.4);
+
+    /* Glassmorphism */
+    --glass-bg: rgba(30, 35, 48, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-backdrop-blur: 10px;
+
+    /* Spacing (4px base grid) */
+    --spacing-xs: 0.25rem;      /* 4px */
+    --spacing-sm: 0.5rem;       /* 8px */
+    --spacing-2: 0.5rem;        /* 8px - alias for compatibility */
+    --spacing-3: 0.75rem;       /* 12px */
+    --spacing-4: 1rem;          /* 16px */
+    --spacing-md: 1rem;         /* 16px */
+    --spacing-6: 1.5rem;        /* 24px */
+    --spacing-lg: 1.5rem;       /* 24px */
+    --spacing-xl: 2rem;         /* 32px */
+    --spacing-2xl: 2.5rem;      /* 40px */
+    --spacing-3xl: 3rem;        /* 48px */
+
+    /* Typography */
+    --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-family-mono: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace;
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-lg: 1.125rem;   /* 18px */
+    --font-size-xl: 1.25rem;    /* 20px */
+
+    /* Border Radius */
+    --radius-sm: 6px;           /* Slightly larger for modern feel */
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+
+    /* Shadows (Elevation System) */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-glow: 0 0 15px rgba(78, 205, 196, 0.3);
+
+    /* Transitions (Smoother, Professional) */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Reset & Base Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #05101a 100%);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* ===== Typography - Professional Aviation ===== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;  /* Medium weight, not heavy */
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
+}
+
+h1 { font-size: 1.875rem; font-weight: 700; }  /* 30px */
+h2 { font-size: 1.5rem; font-weight: 600; }    /* 24px */
+h3 { font-size: 1.25rem; font-weight: 600; }   /* 20px */
+h4 { font-size: 1.125rem; font-weight: 500; }  /* 18px */
+h5 { font-size: 1rem; font-weight: 500; }      /* 16px */
+
+.value {
+    font-family: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace;
+    font-weight: 500;  /* Medium weight for better readability */
+}
+
+/* ===== Header ===== */
+.main-header {
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-color);
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.title-section h1 {
+    font-size: 1.75rem;
+    background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-xs);
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.status-bar {
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: center;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-full);
+    background: var(--accent-success);
+    box-shadow: 0 0 8px var(--accent-success);
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.offline {
+    background: var(--accent-danger);
+    box-shadow: 0 0 8px var(--accent-danger);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.timestamp {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.125rem;
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+/* ===== Dashboard Container ===== */
+.dashboard-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ===== System Status Panel ===== */
+.system-status-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.status-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur)); /* Safari support */
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl); /* Increased padding (24px -> 32px) */
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-normal);
+}
+
+/* Enhanced hover state with stronger teal glow - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .status-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-xl), 0 0 20px rgba(78, 205, 196, 0.4);
+        border-color: rgba(78, 205, 196, 0.5);
+        transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+.status-card h3 {
+    color: var(--accent-primary);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== Gauge Styling - Modern Glassmorphism ===== */
+.gauge-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto var(--spacing-lg);
+    padding: var(--spacing-md);
+
+    /* Glassmorphism effect */
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-backdrop-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+
+    /* Elevation and glow */
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+
+    /* Smooth transitions */
+    transition: all var(--transition-normal);
+}
+
+/* Enhanced gauge hover with glassmorphism - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .gauge-container:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: var(--shadow-xl), 0 0 25px rgba(78, 205, 196, 0.5);
+        border-color: rgba(78, 205, 196, 0.6);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+.gauge-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+    margin: 0 auto;
+}
+
+.gauge-value {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.gauge-value .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1;
+}
+
+.gauge-value .unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--accent-primary);
+    display: block;
+    margin-top: var(--spacing-xs);
+    letter-spacing: 0.05em;
+}
+
+/* ===== Status Details ===== */
+.status-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) 0;
+}
+
+.status-item .label {
+    color: var(--text-secondary);
+    min-width: 120px;
+    font-size: 0.875rem;
+}
+
+.state-indicator {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.state-indicator.normal {
+    background: var(--accent-success);
+    color: var(--bg-primary);
+}
+
+.state-indicator.warning {
+    background: var(--accent-warning);
+    color: var(--bg-primary);
+}
+
+.state-indicator.critical {
+    background: var(--accent-danger);
+    color: white;
+}
+
+/* ===== Health Bar - Enhanced with Animated Gradients ===== */
+.health-bar-container {
+    position: relative;
+    flex: 1;
+    height: 24px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.health-bar-fill {
+    height: 100%;
+    width: 0%;
+    position: relative;
+    transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1),
+                background 500ms cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--radius-md);
+    will-change: width, background, box-shadow;
+}
+
+/* Health State: Excellent (90-100%) - Teal Gradient */
+.health-bar-fill.excellent {
+    background: linear-gradient(90deg, #4ecdc4 0%, #6ee7df 100%);
+    box-shadow: 0 0 10px rgba(78, 205, 196, 0.4),
+                0 0 20px rgba(78, 205, 196, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Health State: Good (70-89%) - Blue Gradient */
+.health-bar-fill.good {
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.4),
+                0 0 20px rgba(59, 130, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Health State: Warning (50-69%) - Yellow Gradient */
+.health-bar-fill.warning {
+    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4),
+                0 0 20px rgba(245, 158, 11, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Health State: Critical (<50%) - Red Gradient with Pulsing */
+.health-bar-fill.critical {
+    background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5),
+                0 0 20px rgba(239, 68, 68, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    animation: pulse-critical 2s ease-in-out infinite;
+}
+
+/* Pulsing animation for critical state */
+@keyframes pulse-critical {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Percentage text inside health bar */
+.health-bar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    z-index: 10;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 300ms ease-in-out;
+}
+
+/* ===== Bus Systems ===== */
+.bus-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.bus-status {
+    background: var(--bg-tertiary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.bus-status h4 {
+    color: var(--accent-primary);
+    font-size: 1rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.bus-details {
+    margin-bottom: var(--spacing-md);
+}
+
+/* ===== Circuit Breakers - Modern Glassmorphism Design ===== */
+.circuit-breakers h5 {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.breaker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-3);
+}
+
+/* Breaker Button Base */
+.breaker {
+    position: relative;
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-family: var(--font-family-sans);
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Closed State - Teal Professional */
+.breaker.closed {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 10px rgba(78, 205, 196, 0.3),
+                var(--shadow-md);
+}
+
+.breaker.closed::before {
+    content: '✓';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 0 8px rgba(78, 205, 196, 0.6);
+    transition: all 0.3s ease;
+}
+
+.breaker.closed .breaker-status {
+    color: var(--accent-primary);
+}
+
+.breaker.closed .breaker-indicator {
+    background: var(--accent-primary);
+    box-shadow: 0 0 8px rgba(78, 205, 196, 0.6);
+}
+
+/* Tripped State - Red Warning with Pulsing */
+.breaker.tripped {
+    border-color: var(--accent-danger);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4),
+                var(--shadow-md);
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+.breaker.tripped::before {
+    content: '⚠';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
+    background: var(--accent-danger);
+    color: white;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+    animation: pulse-indicator 1.5s ease-in-out infinite;
+}
+
+.breaker.tripped .breaker-status {
+    color: var(--accent-danger);
+    font-weight: 700;
+}
+
+.breaker.tripped .breaker-indicator {
+    background: var(--accent-danger);
+    animation: pulse-indicator 1.5s ease-in-out infinite;
+}
+
+/* Enhanced hover effects - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .breaker:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(78, 205, 196, 0.5),
+                    var(--shadow-lg);
+        border-color: rgba(78, 205, 196, 0.6);
+    }
+
+    .breaker.tripped:hover {
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.6),
+                    var(--shadow-lg);
+        border-color: rgba(239, 68, 68, 0.5);
+    }
+}
+
+/* Breaker Label (Generated Name) */
+.breaker-label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Breaker Rating (Amperage) */
+.breaker .rating {
+    font-family: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+}
+
+/* Breaker Status Text (CLOSED/TRIPPED) */
+.breaker-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+    margin-top: var(--spacing-xs);
+}
+
+/* State Indicator Badge (Top-right dot) */
+.breaker-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    transition: all 0.3s ease;
+    z-index: 5;
+}
+
+/* Pulse Animations */
+@keyframes pulse-warning {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+    }
+}
+
+@keyframes pulse-indicator {
+    0%, 100% {
+        opacity: 0.6;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.9);
+    }
+}
+
+/* ===== Total Load ===== */
+.total-load {
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid var(--accent-primary);
+}
+
+.total-load .value {
+    font-size: 1.25rem;
+    color: var(--accent-primary);
+}
+
+/* ===== Right Panel ===== */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* ===== Diagnostic Panel ===== */
+.diagnostic-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-normal);
+}
+
+/* Enhanced diagnostic panel hover - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .diagnostic-panel:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-xl), 0 0 20px rgba(78, 205, 196, 0.3);
+        border-color: rgba(78, 205, 196, 0.4);
+    }
+}
+
+.diagnostic-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.form-group label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    background: rgba(38, 53, 69, 0.6); /* Semi-transparent for glassmorphism */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-3) var(--spacing-4); /* Increased padding: 12px 16px */
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all var(--transition-normal);
+}
+
+/* Enhanced input focus animations - Sprint 3 Task 3.1 */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2), 0 0 20px rgba(78, 205, 196, 0.25);
+    background: var(--bg-elevated);
+    transform: translateY(-1px);
+    transition: all 200ms ease-out;
+}
+
+@media (hover: hover) {
+    .form-group input:hover,
+    .form-group textarea:hover,
+    .form-group select:hover {
+        border-color: var(--border-hover);
+        box-shadow: 0 0 8px rgba(78, 205, 196, 0.1);
+        transition: all 200ms ease-out;
+    }
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+/* ===== Buttons - Professional Aviation ===== */
+.btn {
+    background: linear-gradient(135deg, var(--accent-primary), #3db8af);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-transform: uppercase;
+    letter-spacing: 0.5px; /* Reduced from 1px for better readability */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.25), 0 0 0 0 rgba(78, 205, 196, 0);
+}
+
+/* Enhanced button hover with brightness - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(78, 205, 196, 0.4), 0 0 20px rgba(78, 205, 196, 0.3);
+        filter: brightness(1.1);
+        transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+    transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.25), 0 0 0 3px rgba(78, 205, 196, 0.3);
+}
+
+.btn-diagnose {
+    width: 100%;
+    margin-top: var(--spacing-md);
+}
+
+.btn-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke-width: 2;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+.btn-fault {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    font-size: 0.875rem;
+    padding: var(--spacing-2) var(--spacing-4);
+    box-shadow: none;
+    letter-spacing: 0.3px;
+}
+
+/* Enhanced fault button hover - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .btn-fault:hover {
+        background: var(--bg-elevated);
+        border-color: var(--accent-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(78, 205, 196, 0.25), 0 0 15px rgba(78, 205, 196, 0.2);
+        filter: brightness(1.08);
+        transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+.btn-fault:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-clear {
+    background: linear-gradient(135deg, var(--accent-primary), #6ee7df);
+    color: var(--bg-primary);
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+/* Enhanced clear button hover - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .btn-clear:hover {
+        box-shadow: 0 8px 24px rgba(78, 205, 196, 0.45), 0 0 20px rgba(78, 205, 196, 0.3);
+        transform: translateY(-3px);
+        filter: brightness(1.1);
+        transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+.btn-clear:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ===== Results Panel ===== */
+.results-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    flex: 1;
+    min-height: 400px;
+    transition: all var(--transition-normal);
+}
+
+/* Enhanced results panel hover - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .results-panel:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-xl), 0 0 20px rgba(78, 205, 196, 0.3);
+        border-color: rgba(78, 205, 196, 0.4);
+    }
+}
+
+.results-content > div {
+    margin-bottom: var(--spacing-lg);
+}
+
+.results-content h3 {
+    color: var(--accent-primary);
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.safety-warnings {
+    background: rgba(255, 107, 53, 0.1);
+    border: 1px solid var(--accent-danger);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.safety-warnings ul {
+    list-style: none;
+    padding-left: var(--spacing-md);
+}
+
+.safety-warnings li::before {
+    content: "⚠️";
+    margin-right: var(--spacing-sm);
+}
+
+.troubleshooting-steps ol {
+    padding-left: var(--spacing-lg);
+}
+
+.troubleshooting-steps li {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.no-results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ===== Fault Controls Footer ===== */
+.fault-controls {
+    background: var(--bg-secondary);
+    border-top: 2px solid var(--border-color);
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: 0 -2px 10px var(--shadow-color);
+}
+
+.controls-container {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.controls-container h3 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.fault-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.fault-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.fault-indicator {
+    color: var(--accent-success);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.fault-indicator.active {
+    color: var(--accent-warning);
+}
+
+/* ===== Loading Overlay ===== */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 31, 46, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--accent-primary);
+    border-radius: var(--radius-full);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-overlay p {
+    margin-top: var(--spacing-lg);
+    color: var(--text-primary);
+    font-size: 1.125rem;
+}
+
+/* ===== Notification Toast ===== */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 300px;
+    max-width: 400px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    transform: translateX(calc(100% + 40px));
+    transition: transform var(--transition-normal);
+    z-index: 10000;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: var(--accent-success);
+    color: white;
+}
+
+.notification.error {
+    background: var(--accent-danger);
+    color: white;
+}
+
+.notification.warning {
+    background: var(--accent-warning);
+    color: var(--bg-primary);
+}
+
+.notification.info {
+    background: var(--accent-primary);
+    color: white;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+
+    .bus-container {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+
+    .status-bar {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .dashboard-container {
+        padding: var(--spacing-md);
+    }
+
+    .gauge-container {
+        width: 180px;
+        height: 180px;
+        padding: var(--spacing-sm);
+    }
+
+    .gauge-value .value {
+        font-size: 1.75rem;
+    }
+
+    .breaker-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-2);
+    }
+
+    .fault-buttons {
+        flex-direction: column;
+    }
+
+    .btn-fault {
+        width: 100%;
+    }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .fault-controls,
+    .loading-overlay,
+    .notification {
+        display: none !important;
+    }
+}
+
+/* ===== Accessibility ===== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Focus styles for keyboard navigation */
+*:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --bg-primary: #000000;
+        --text-primary: #ffffff;
+        --border-color: #ffffff;
+    }
+}
+
+/* ===== Weather Panel (Sprint 4) ===== */
+.weather-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-normal);
+}
+
+/* Enhanced weather panel hover - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .weather-panel:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-xl), 0 0 20px rgba(78, 205, 196, 0.3);
+        border-color: rgba(78, 205, 196, 0.4);
+    }
+}
+
+.weather-panel h2 {
+    margin-bottom: var(--spacing-md);
+}
+
+.weather-source-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.weather-source {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.btn-refresh-weather {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 1.25rem;
+}
+
+/* Enhanced refresh button hover - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .btn-refresh-weather:hover {
+        background: var(--accent-primary);
+        color: white;
+        transform: rotate(180deg);
+        box-shadow: 0 0 15px rgba(78, 205, 196, 0.4);
+    }
+}
+
+.weather-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.weather-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--bg-tertiary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-normal);
+}
+
+/* Enhanced weather item hover - Sprint 3 Task 3.1 */
+@media (hover: hover) {
+    .weather-item:hover {
+        transform: translateY(-1px);
+        border-color: rgba(78, 205, 196, 0.3);
+        box-shadow: 0 2px 8px rgba(78, 205, 196, 0.15);
+    }
+}
+
+.weather-icon {
+    width: 2rem;
+    height: 2rem;
+    stroke-width: 1.5;
+    color: var(--accent-primary);
+    opacity: 0.9;
+    flex-shrink: 0;
+}
+
+.weather-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-data label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.weather-value {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.temperature-effects {
+    background: rgba(78, 205, 196, 0.1);
+    border: 1px solid var(--accent-success);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.temperature-effects h3 {
+    font-size: 0.875rem;
+    color: var(--accent-success);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+}
+
+.effects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.effect-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.effect-item label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.effect-value {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent-success);
+}
+
+/* ===== Status Badges (Sprint 2.4 - Task 2.4) ===== */
+
+/* Status Badge Base */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1, 0.25rem);
+    padding: var(--spacing-1, 0.25rem) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+/* Connection Status Indicator - Enhanced */
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--radius-full);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.connection-status.connected {
+    background: var(--accent-primary);
+    color: white;
+    animation: pulse-slow 3s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(78, 205, 196, 0.4);
+}
+
+.connection-status.disconnected {
+    background: var(--accent-danger);
+    color: white;
+    animation: pulse-fast 1.5s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+}
+
+.connection-status.connecting {
+    background: var(--accent-warning);
+    color: white;
+    animation: pulse-medium 2s ease-in-out infinite;
+}
+
+/* State Badge Variants */
+.badge-normal {
+    background: linear-gradient(135deg, #4ecdc4, #6ee7df);
+    color: white;
+}
+
+.badge-warning {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: white;
+    animation: pulse-medium 2s ease-in-out infinite;
+}
+
+.badge-critical {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+    color: white;
+    animation: pulse-fast 1.5s ease-in-out infinite;
+}
+
+.badge-charging {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    color: white;
+    animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Badge Icon */
+.badge-icon {
+    width: 12px;
+    height: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Pulse Animations for Status Indicators */
+@keyframes pulse-slow {
+    0%, 100% {
+        opacity: 0.9;
+        box-shadow: 0 0 10px rgba(78, 205, 196, 0.4);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(78, 205, 196, 0.6);
+    }
+}
+
+@keyframes pulse-medium {
+    0%, 100% {
+        opacity: 0.8;
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    }
+}
+
+@keyframes pulse-fast {
+    0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+        box-shadow: 0 0 25px rgba(239, 68, 68, 0.7);
+    }
+}
+
+/* Spinner Animation (for connecting state) */
+.spinner-icon {
+    animation: spin-icon 1s linear infinite;
+}
+
+@keyframes spin-icon {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ===== Notification System (Sprint 3 Task 3.4) ===== */
+
+/* Notification Container - Top-Right Fixed Position */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* 12px gap for stacking */
+    pointer-events: none;
+    max-width: 360px;
+}
+
+/* Notification Toast Base - Glassmorphism Design */
+.notification-toast {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    max-height: 120px;
+    padding: 16px;
+    border-radius: var(--radius-lg); /* 12px */
+    pointer-events: all;
+    overflow: hidden;
+
+    /* Glassmorphism Effect */
+    background: rgba(30, 35, 48, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid var(--accent-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+
+    /* Entrance Animation */
+    transform: translateX(calc(100% + 20px));
+    opacity: 0;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Notification Visible State */
+.notification-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Notification Exit Animation */
+.notification-toast.hide {
+    transform: translateX(calc(100% + 20px));
+    opacity: 0;
+    transition: all 250ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Notification Header - Icon, Title, Close Button */
+.notification-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+/* Lucide Icon Container */
+.notification-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+}
+
+/* Notification Title */
+.notification-title {
+    flex: 1;
+    font-family: var(--font-family-sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+/* Close Button (X) */
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.notification-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    filter: brightness(1.2);
+}
+
+/* Notification Message */
+.notification-message {
+    font-family: var(--font-family-sans);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+/* Progress Bar Container */
+.notification-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(51, 65, 85, 0.3);
+    overflow: hidden;
+}
+
+/* Progress Bar Fill */
+.notification-progress-fill {
+    height: 100%;
+    width: 100%;
+    transform-origin: left center;
+    transition: transform linear;
+}
+
+/* Notification Type Variants - Teal, Red, Yellow, Blue */
+
+/* Success (Teal) */
+.notification-toast.notification-success {
+    border-color: #4ecdc4;
+    background: rgba(78, 205, 196, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.notification-success .notification-icon {
+    color: #4ecdc4;
+}
+
+.notification-success .notification-progress-fill {
+    background: #4ecdc4;
+}
+
+/* Error (Red) */
+.notification-toast.notification-error {
+    border-color: #ef476f;
+    background: rgba(239, 71, 111, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.notification-error .notification-icon {
+    color: #ef476f;
+}
+
+.notification-error .notification-progress-fill {
+    background: #ef476f;
+}
+
+/* Warning (Yellow) */
+.notification-toast.notification-warning {
+    border-color: #ff9f1c;
+    background: rgba(255, 159, 28, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.notification-warning .notification-icon {
+    color: #ff9f1c;
+}
+
+.notification-warning .notification-progress-fill {
+    background: #ff9f1c;
+}
+
+/* Info (Blue) */
+.notification-toast.notification-info {
+    border-color: #06d6a0;
+    background: rgba(6, 214, 160, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.notification-info .notification-icon {
+    color: #06d6a0;
+}
+
+.notification-info .notification-progress-fill {
+    background: #06d6a0;
+}
+
+/* Pause Progress on Hover (Optional Enhancement) */
+.notification-toast:hover .notification-progress-fill {
+    animation-play-state: paused !important;
+}
+
+/* Accessibility - Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    .notification-toast {
+        animation: none;
+        transition: none;
+    }
+
+    .notification-toast.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .notification-toast.hide {
+        opacity: 0;
+    }
+}
+
+/* Responsive - Mobile Adjustments */
+@media (max-width: 480px) {
+    .notification-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .notification-toast {
+        width: 100%;
+    }
+}
+
+/* ===== Loading Spinner (Sprint 4) ===== */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+}
+
+.spinner-animation {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--accent-primary);
+    border-radius: var(--radius-full);
+    animation: spin 1s linear infinite;
+}
+
+.spinner-message {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Loading state for elements */
+.loading {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ===== Weather Panel Responsive ===== */
+@media (max-width: 768px) {
+    .weather-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .effects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .notification-container {
+        left: var(--spacing-md);
+        right: var(--spacing-md);
+    }
+
+    .notification-container .notification {
+        min-width: auto;
+        max-width: 100%;
+    }
+}
+
+/* ===== Sprint 3 Task 3.2: Loading States & Skeleton Loaders ===== */
+
+/* Skeleton Base Class - Shimmer Animation */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(78, 205, 196, 0.05) 0%,
+        rgba(78, 205, 196, 0.15) 50%,
+        rgba(78, 205, 196, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--radius-md);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer Keyframe Animation */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Skeleton Gauge - Circular Shape for Gauges */
+.skeleton-gauge {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    margin: 0 auto var(--spacing-lg);
+    background: linear-gradient(
+        90deg,
+        rgba(78, 205, 196, 0.05) 0%,
+        rgba(78, 205, 196, 0.15) 50%,
+        rgba(78, 205, 196, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Skeleton Text Lines - Various Widths */
+.skeleton-text {
+    height: 16px;
+    background: linear-gradient(
+        90deg,
+        rgba(78, 205, 196, 0.05) 0%,
+        rgba(78, 205, 196, 0.15) 50%,
+        rgba(78, 205, 196, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.skeleton-text.large {
+    height: 24px;
+}
+
+.skeleton-text.medium {
+    height: 20px;
+}
+
+.skeleton-text.small {
+    height: 16px;
+}
+
+.skeleton-text.width-100 {
+    width: 100%;
+}
+
+.skeleton-text.width-90 {
+    width: 90%;
+}
+
+.skeleton-text.width-80 {
+    width: 80%;
+}
+
+.skeleton-text.width-70 {
+    width: 70%;
+}
+
+.skeleton-text.width-60 {
+    width: 60%;
+}
+
+/* Pulse Animation for Small Elements */
+@keyframes pulse-skeleton {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.skeleton-pulse {
+    animation: pulse-skeleton 2s ease-in-out infinite;
+}
+
+/* Modern Teal Spinner - Sprint 3 Task 3.2 */
+.spinner-modern {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-primary);
+    border-radius: var(--radius-full);
+    animation: spin-modern 1s linear infinite;
+}
+
+@keyframes spin-modern {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Spinner Overlay - Full-Screen Centered */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 25, 41, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    z-index: 9999;
+}
+
+.spinner-overlay .spinner-modern {
+    width: 50px;
+    height: 50px;
+    border-width: 4px;
+}
+
+.spinner-overlay .spinner-message {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Inline Spinner Container */
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    gap: var(--spacing-md);
+}
+
+/* Skeleton Results Panel - Diagnostic Loading State */
+.skeleton-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.skeleton-results-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.skeleton-results-section .skeleton-text:first-child {
+    width: 40%;
+    height: 20px;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Weather Item Skeleton */
+.skeleton-weather-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--bg-tertiary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.skeleton-weather-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(
+        90deg,
+        rgba(78, 205, 196, 0.05) 0%,
+        rgba(78, 205, 196, 0.15) 50%,
+        rgba(78, 205, 196, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+.skeleton-weather-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+/* Fade Transition for Skeleton → Content */
+.fade-in {
+    animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-out {
+    animation: fadeOut 300ms ease-out;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+/* Disable Hover on Skeleton Elements */
+.skeleton:hover,
+.skeleton-gauge:hover,
+.skeleton-text:hover,
+.skeleton-weather-item:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border-color);
+}
+
+/* Loading State Accessibility */
+.loading-state {
+    position: relative;
+}
+
+.loading-state[aria-busy="true"] {
+    pointer-events: none;
+}
+
+/* Screen Reader Only Text for Loading States */
+.sr-only-loading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ===== Sprint 3 Task 3.3: Results Panel Animation ===== */
+
+/* Panel Entrance Animation - Slide in from right with fade */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Section Stagger Animation - Slide up with fade */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Results Panel Slide-In Class */
+.results-panel-enter {
+    animation: slideInRight 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Section Stagger Classes */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeInUp 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Stagger Delay Classes */
+.stagger-1 {
+    animation-delay: 0ms;
+}
+
+.stagger-2 {
+    animation-delay: 100ms;
+}
+
+.stagger-3 {
+    animation-delay: 200ms;
+}
+
+.stagger-4 {
+    animation-delay: 300ms;
+}
+
+/* Individual Item Animation (Optional Enhancement) */
+.fade-in-item {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeInUp 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Item Stagger Delays (50ms increments) */
+.item-stagger-1 { animation-delay: 50ms; }
+.item-stagger-2 { animation-delay: 100ms; }
+.item-stagger-3 { animation-delay: 150ms; }
+.item-stagger-4 { animation-delay: 200ms; }
+.item-stagger-5 { animation-delay: 250ms; }
+
+/* Accessibility - Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    .results-panel-enter,
+    .fade-in-up,
+    .fade-in-item {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}

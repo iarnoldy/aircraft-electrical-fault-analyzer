@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification System Test - Sprint 3 Task 3.4</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Notification System Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Testing Tool Specific Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a1929 0%, #05101a 100%);
+            color: #f8fafc;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .test-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f8fafc, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .test-header p {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .test-section {
+            background: rgba(30, 35, 48, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .test-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4ecdc4;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .test-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 200ms ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .test-btn:active {
+            transform: translateY(0);
+        }
+
+        .test-btn.success {
+            background: linear-gradient(135deg, #4ecdc4, #6ee7df);
+            color: #0a1929;
+        }
+
+        .test-btn.error {
+            background: linear-gradient(135deg, #ef476f, #ff6b8a);
+            color: white;
+        }
+
+        .test-btn.warning {
+            background: linear-gradient(135deg, #ff9f1c, #ffb84d);
+            color: #0a1929;
+        }
+
+        .test-btn.info {
+            background: linear-gradient(135deg, #06d6a0, #4ae6c0);
+            color: #0a1929;
+        }
+
+        .test-btn.utility {
+            background: rgba(51, 65, 85, 0.6);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-input-group {
+            margin-bottom: 16px;
+        }
+
+        .test-input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-input-group input,
+        .test-input-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(38, 53, 69, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            transition: all 200ms ease;
+        }
+
+        .test-input-group input:focus,
+        .test-input-group textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+
+        .test-input-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .test-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(51, 65, 85, 0.6);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .test-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4ecdc4;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4ecdc4;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-value {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: #4ecdc4;
+            margin-left: 10px;
+        }
+
+        .test-info {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        .acceptance-checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .acceptance-checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .acceptance-checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .acceptance-checklist li::before {
+            content: '✓';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: #4ecdc4;
+            color: #0a1929;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container (auto-generated by notifications.js) -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <div class="test-container">
+        <!-- Header -->
+        <div class="test-header">
+            <h1>Notification System Test</h1>
+            <p>Sprint 3 Task 3.4 - Aircraft Electrical Fault Analyzer</p>
+        </div>
+
+        <!-- Notification Type Tests -->
+        <div class="test-section">
+            <h2>Notification Types (4 Variants)</h2>
+            <div class="test-buttons">
+                <button class="test-btn success" onclick="testSuccess()">
+                    <span data-lucide="check-circle" style="width:16px;height:16px;"></span>
+                    Success (Teal)
+                </button>
+                <button class="test-btn error" onclick="testError()">
+                    <span data-lucide="alert-circle" style="width:16px;height:16px;"></span>
+                    Error (Red)
+                </button>
+                <button class="test-btn warning" onclick="testWarning()">
+                    <span data-lucide="alert-triangle" style="width:16px;height:16px;"></span>
+                    Warning (Yellow)
+                </button>
+                <button class="test-btn info" onclick="testInfo()">
+                    <span data-lucide="info" style="width:16px;height:16px;"></span>
+                    Info (Blue)
+                </button>
+            </div>
+            <p class="test-info">Click buttons to test each notification type with Lucide icons, glassmorphism, and progress bar.</p>
+        </div>
+
+        <!-- Custom Message Test -->
+        <div class="test-section">
+            <h2>Custom Notification</h2>
+            <div class="test-input-group">
+                <label for="customTitle">Title</label>
+                <input type="text" id="customTitle" placeholder="Enter notification title..." value="Custom Title">
+            </div>
+            <div class="test-input-group">
+                <label for="customMessage">Message</label>
+                <textarea id="customMessage" placeholder="Enter notification message...">This is a custom notification message to test the system.</textarea>
+            </div>
+            <div class="test-buttons">
+                <button class="test-btn success" onclick="showCustomNotification('success')">Success</button>
+                <button class="test-btn error" onclick="showCustomNotification('error')">Error</button>
+                <button class="test-btn warning" onclick="showCustomNotification('warning')">Warning</button>
+                <button class="test-btn info" onclick="showCustomNotification('info')">Info</button>
+            </div>
+        </div>
+
+        <!-- Duration Adjustment -->
+        <div class="test-section">
+            <h2>Duration Adjustment</h2>
+            <div class="test-input-group">
+                <label for="durationSlider">
+                    Duration: <span class="slider-value" id="durationValue">5s</span>
+                </label>
+                <input type="range" id="durationSlider" class="test-slider" min="1" max="10" value="5" step="0.5">
+            </div>
+            <div class="test-buttons">
+                <button class="test-btn success" onclick="testWithDuration()">Test with Duration</button>
+            </div>
+            <p class="test-info">Adjust slider to test different auto-dismiss durations (1-10 seconds).</p>
+        </div>
+
+        <!-- Stacking & Limit Test -->
+        <div class="test-section">
+            <h2>Stacking & 3-Notification Limit</h2>
+            <div class="test-buttons">
+                <button class="test-btn warning" onclick="testStacking()">Trigger 5 Notifications</button>
+                <button class="test-btn utility" onclick="clearAll()">Clear All</button>
+            </div>
+            <p class="test-info">Tests stacking with 12px gap and 3-notification limit (oldest dismissed first).</p>
+        </div>
+
+        <!-- Integration Tests (Simulated) -->
+        <div class="test-section">
+            <h2>Integration Points (Simulated)</h2>
+            <div class="test-buttons">
+                <button class="test-btn success" onclick="simulateFaultCleared()">Fault Cleared</button>
+                <button class="test-btn success" onclick="simulateDiagnosticSuccess()">Diagnostic Success</button>
+                <button class="test-btn error" onclick="simulateAPIError()">API Error</button>
+                <button class="test-btn warning" onclick="simulateSafetyWarning()">Safety Warning</button>
+            </div>
+            <p class="test-info">Simulates real application trigger points from app.js.</p>
+        </div>
+
+        <!-- Acceptance Criteria -->
+        <div class="test-section">
+            <h2>Acceptance Criteria Checklist</h2>
+            <ul class="acceptance-checklist">
+                <li>Notifications slide in from right (300ms cubic-bezier)</li>
+                <li>Notifications slide out to right (250ms cubic-bezier)</li>
+                <li>Progress bar counts down from 100% to 0%</li>
+                <li>Progress bar color matches notification type</li>
+                <li>Multiple notifications stack with 12px gap</li>
+                <li>Maximum 3 visible at once (oldest dismissed)</li>
+                <li>All 4 types work (success, error, warning, info)</li>
+                <li>Lucide icons display correctly</li>
+                <li>Glassmorphism backdrop-filter visible</li>
+                <li>Close button dismisses notification</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Notification System JavaScript -->
+    <script src="notifications.js"></script>
+
+    <!-- Test Functions -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Update duration slider value display
+        const durationSlider = document.getElementById('durationSlider');
+        const durationValue = document.getElementById('durationValue');
+        durationSlider.addEventListener('input', (e) => {
+            durationValue.textContent = `${e.target.value}s`;
+        });
+
+        // Test Success Notification
+        function testSuccess() {
+            window.notify.success('Fault Cleared', 'All electrical system faults have been reset');
+        }
+
+        // Test Error Notification
+        function testError() {
+            window.notify.error('API Error', 'Failed to connect to diagnostic server');
+        }
+
+        // Test Warning Notification
+        function testWarning() {
+            window.notify.warning('Safety Warning', 'Battery voltage below safe operating threshold');
+        }
+
+        // Test Info Notification
+        function testInfo() {
+            window.notify.info('System Status', 'Electrical system monitoring active');
+        }
+
+        // Show Custom Notification
+        function showCustomNotification(type) {
+            const title = document.getElementById('customTitle').value || 'Custom Title';
+            const message = document.getElementById('customMessage').value || 'Custom message';
+            const duration = parseFloat(durationSlider.value) * 1000;
+
+            window.notify.showNotification(type, title, message, duration);
+        }
+
+        // Test with Duration
+        function testWithDuration() {
+            const duration = parseFloat(durationSlider.value) * 1000;
+            window.notify.success(
+                'Duration Test',
+                `This notification will dismiss in ${durationSlider.value} seconds`,
+                duration
+            );
+        }
+
+        // Test Stacking (5 notifications to trigger 3-limit)
+        function testStacking() {
+            window.notify.success('Notification 1', 'First notification in stack');
+            setTimeout(() => window.notify.error('Notification 2', 'Second notification in stack'), 200);
+            setTimeout(() => window.notify.warning('Notification 3', 'Third notification in stack'), 400);
+            setTimeout(() => window.notify.info('Notification 4', 'Fourth notification (should dismiss #1)'), 600);
+            setTimeout(() => window.notify.success('Notification 5', 'Fifth notification (should dismiss #2)'), 800);
+        }
+
+        // Clear All Notifications
+        function clearAll() {
+            window.notify.clearAllNotifications();
+        }
+
+        // Simulated Integration Points
+        function simulateFaultCleared() {
+            window.notify.success('Faults Cleared', 'All faults have been reset');
+        }
+
+        function simulateDiagnosticSuccess() {
+            window.notify.success('Diagnostic Complete', 'Analysis results are ready');
+            setTimeout(() => {
+                window.notify.warning('Safety Warning', 'Battery health below 70% - replacement recommended');
+            }, 1000);
+        }
+
+        function simulateAPIError() {
+            window.notify.error('Diagnostic Failed', 'Failed to submit diagnostic request');
+        }
+
+        function simulateSafetyWarning() {
+            window.notify.warning('Safety Warning', 'Alternator output voltage exceeds safe limits');
+        }
+
+        // Log initialization
+        console.log('[test-notifications.html] Notification test page loaded');
+        console.log('[test-notifications.html] Global notify object:', window.notify);
+    </script>
+</body>
+</html>

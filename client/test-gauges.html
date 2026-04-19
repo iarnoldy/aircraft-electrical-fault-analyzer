@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart.js Gauge Test</title>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a1929;
+            color: #f8fafc;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        h1 {
+            color: #4ecdc4;
+            margin-bottom: 20px;
+        }
+
+        .gauges-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .gauge-wrapper {
+            background: rgba(30, 35, 48, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            width: 240px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .gauge-wrapper h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #cbd5e1;
+        }
+
+        .gauge-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .gauge-value {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .gauge-value .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: #f8fafc;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            line-height: 1;
+        }
+
+        .gauge-value .unit {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #4ecdc4;
+            display: block;
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #4ecdc4;
+            color: #0a1929;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        button:hover {
+            background: #6ee7df;
+            transform: translateY(-2px);
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chart.js Gauge Implementation Test</h1>
+
+    <div class="gauges-container">
+        <div class="gauge-wrapper">
+            <h3>Battery Voltage</h3>
+            <div class="gauge-container">
+                <canvas id="batteryGauge"></canvas>
+                <div class="gauge-value">
+                    <span id="batteryValue" class="value">12.6</span>
+                    <span class="unit">V</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gauge-wrapper">
+            <h3>Alternator Output</h3>
+            <div class="gauge-container">
+                <canvas id="alternatorGauge"></canvas>
+                <div class="gauge-value">
+                    <span id="alternatorValue" class="value">14.2</span>
+                    <span class="unit">V</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="testLowBattery()">Test Low Battery (11.0V)</button>
+        <button onclick="testNormalBattery()">Test Normal (12.6V)</button>
+        <button onclick="testHighBattery()">Test High (13.8V)</button>
+        <button onclick="testAlternatorFailure()">Alternator Failure (0V)</button>
+        <button onclick="testNormalAlternator()">Normal Alternator (14.2V)</button>
+        <button onclick="animateGauges()">Animate Values</button>
+    </div>
+
+    <div class="status" id="status">
+        Status: Gauges initialized. Click buttons to test different values.
+    </div>
+
+    <script>
+        // Gauge state
+        let batteryGauge, alternatorGauge;
+
+        // Create Chart.js gauge (same function as in app.js)
+        function createChartJsGauge(canvas, options) {
+            const { minValue, maxValue, label, unit } = options;
+            const range = maxValue - minValue;
+            const currentValue = minValue;
+            const remainingValue = range - (currentValue - minValue);
+
+            const createTealGradient = (ctx, chartArea) => {
+                if (!chartArea) return '#4ecdc4';
+                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                gradient.addColorStop(0, '#3db8af');
+                gradient.addColorStop(1, '#4ecdc4');
+                return gradient;
+            };
+
+            const config = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [currentValue - minValue, remainingValue],
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const { ctx, chartArea } = chart;
+
+                            if (!chartArea) {
+                                return ['#4ecdc4', 'rgba(51, 65, 85, 0.2)'];
+                            }
+
+                            return [
+                                createTealGradient(ctx, chartArea),
+                                'rgba(51, 65, 85, 0.2)'
+                            ];
+                        },
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270,
+                        cutout: '75%',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 750,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            };
+
+            const chart = new Chart(canvas, config);
+
+            return {
+                chart: chart,
+                options: options,
+                setValue: function(newValue) {
+                    const clampedValue = Math.max(minValue, Math.min(maxValue, newValue));
+                    const valueInRange = clampedValue - minValue;
+                    const remaining = range - valueInRange;
+
+                    chart.data.datasets[0].data = [valueInRange, remaining];
+                    chart.update('active');
+                }
+            };
+        }
+
+        // Initialize gauges on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            batteryGauge = createChartJsGauge(document.getElementById('batteryGauge'), {
+                minValue: 10.5,
+                maxValue: 14.4,
+                label: 'Battery',
+                unit: 'V'
+            });
+
+            alternatorGauge = createChartJsGauge(document.getElementById('alternatorGauge'), {
+                minValue: 0,
+                maxValue: 16,
+                label: 'Alternator',
+                unit: 'V'
+            });
+
+            // Set initial values
+            batteryGauge.setValue(12.6);
+            alternatorGauge.setValue(14.2);
+
+            updateStatus('Gauges initialized successfully. Chart.js v4.4.0 loaded.');
+        });
+
+        // Test functions
+        function testLowBattery() {
+            batteryGauge.setValue(11.0);
+            document.getElementById('batteryValue').textContent = '11.0';
+            updateStatus('Test: Low battery voltage (11.0V) - Yellow zone');
+        }
+
+        function testNormalBattery() {
+            batteryGauge.setValue(12.6);
+            document.getElementById('batteryValue').textContent = '12.6';
+            updateStatus('Test: Normal battery voltage (12.6V) - Green zone');
+        }
+
+        function testHighBattery() {
+            batteryGauge.setValue(13.8);
+            document.getElementById('batteryValue').textContent = '13.8';
+            updateStatus('Test: High battery voltage (13.8V) - Charging');
+        }
+
+        function testAlternatorFailure() {
+            alternatorGauge.setValue(0);
+            document.getElementById('alternatorValue').textContent = '0.0';
+            updateStatus('Test: Alternator failure (0V) - Red zone');
+        }
+
+        function testNormalAlternator() {
+            alternatorGauge.setValue(14.2);
+            document.getElementById('alternatorValue').textContent = '14.2';
+            updateStatus('Test: Normal alternator output (14.2V) - Green zone');
+        }
+
+        function animateGauges() {
+            updateStatus('Animating gauges through full range...');
+            let value = 10.5;
+            const interval = setInterval(() => {
+                value += 0.2;
+                if (value > 14.4) {
+                    clearInterval(interval);
+                    updateStatus('Animation complete.');
+                    return;
+                }
+                batteryGauge.setValue(value);
+                document.getElementById('batteryValue').textContent = value.toFixed(1);
+            }, 100);
+
+            let altValue = 0;
+            const altInterval = setInterval(() => {
+                altValue += 0.3;
+                if (altValue > 16) {
+                    clearInterval(altInterval);
+                    return;
+                }
+                alternatorGauge.setValue(altValue);
+                document.getElementById('alternatorValue').textContent = altValue.toFixed(1);
+            }, 100);
+        }
+
+        function updateStatus(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            document.getElementById('status').textContent = `[${timestamp}] ${message}`;
+        }
+    </script>
+</body>
+</html>

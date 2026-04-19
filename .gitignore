@@ -1,0 +1,41 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+electrical_fault_analyzer.log
+
+# Test Results
+test-results/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Data Files (keep structure, ignore data)
+data/*.json
+!data/.gitkeep
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Stitch design exports (not source code)
+stitch_advanced_technical_aero_analyzer_variant/
+stitch_advanced_technical_aero_analyzer_variant.zip

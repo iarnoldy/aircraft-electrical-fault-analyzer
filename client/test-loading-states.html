@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading States Testing Tool - Aircraft Electrical Fault Analyzer</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Chart.js for Gauges -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Testing Tool Specific Styles */
+        .test-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            width: 320px;
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+        }
+
+        .test-controls h2 {
+            color: var(--accent-primary);
+            font-size: 1.125rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .test-section {
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .test-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .test-section h3 {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-button {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-bottom: var(--spacing-xs);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .test-button:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.2);
+        }
+
+        .test-button.active {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .speed-control {
+            display: flex;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-sm);
+        }
+
+        .speed-control input[type="range"] {
+            flex: 1;
+            accent-color: var(--accent-primary);
+        }
+
+        .speed-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: var(--spacing-xs);
+        }
+
+        .test-info {
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .status-indicator-test {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: var(--spacing-xs);
+        }
+
+        .status-indicator-test.active {
+            background: var(--accent-success);
+            box-shadow: 0 0 8px var(--accent-success);
+        }
+
+        .status-indicator-test.inactive {
+            background: var(--text-disabled);
+        }
+
+        /* Simplified Layout for Testing */
+        .test-dashboard {
+            padding: var(--spacing-xl);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--spacing-lg);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Testing Controls Panel -->
+    <div class="test-controls">
+        <h2>🧪 Loading States Tester</h2>
+
+        <!-- Gauge Skeleton Tests -->
+        <div class="test-section">
+            <h3>Gauge Skeletons</h3>
+            <button class="test-button" id="testGaugeShow">
+                <span>Show Gauge Skeletons</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+            <button class="test-button" id="testGaugeHide">
+                <span>Hide Gauge Skeletons</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+            <button class="test-button" id="testGaugeToggle">
+                <span>Toggle Gauge Skeletons</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+        </div>
+
+        <!-- Diagnostic Results Skeleton Tests -->
+        <div class="test-section">
+            <h3>Diagnostic Results</h3>
+            <button class="test-button" id="testDiagShow">
+                <span>Show Diagnostic Skeleton</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+            <button class="test-button" id="testDiagHide">
+                <span>Hide Diagnostic Skeleton</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+            <button class="test-button" id="testDiagToggle">
+                <span>Toggle Diagnostic Skeleton</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+        </div>
+
+        <!-- Weather Skeleton Tests -->
+        <div class="test-section">
+            <h3>Weather Panel</h3>
+            <button class="test-button" id="testWeatherShow">
+                <span>Show Weather Skeleton</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+            <button class="test-button" id="testWeatherHide">
+                <span>Hide Weather Skeleton</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+            <button class="test-button" id="testWeatherToggle">
+                <span>Toggle Weather Skeleton</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+        </div>
+
+        <!-- Spinner Tests -->
+        <div class="test-section">
+            <h3>Spinner Overlay</h3>
+            <button class="test-button" id="testSpinnerShow">
+                <span>Show Spinner Overlay</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+            <button class="test-button" id="testSpinnerHide">
+                <span>Hide Spinner Overlay</span>
+                <span class="status-indicator-test inactive"></span>
+            </button>
+        </div>
+
+        <!-- Animation Speed Control -->
+        <div class="test-section">
+            <h3>Animation Speed</h3>
+            <div class="speed-control">
+                <input type="range" id="speedControl" min="0.25" max="3" step="0.25" value="1">
+                <span id="speedValue">1x</span>
+            </div>
+            <div class="speed-label">Adjust shimmer animation speed</div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="test-info">
+            <strong>Sprint 3 Task 3.2</strong><br>
+            Use these controls to test all loading states and skeleton loaders.
+            Shimmer animations should be smooth at 60fps.
+        </div>
+    </div>
+
+    <!-- Test Dashboard Container -->
+    <div class="test-dashboard">
+        <!-- Gauge Test Card -->
+        <div class="status-card">
+            <h3>Gauge Loading Test</h3>
+            <div class="gauge-container">
+                <canvas id="testGauge" width="200" height="200"></canvas>
+                <div class="gauge-value">
+                    <span class="value">12.6</span>
+                    <span class="unit">V</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagnostic Results Test Card -->
+        <div class="results-panel">
+            <h2>Diagnostic Results Test</h2>
+            <div id="testResultsContent" class="results-content">
+                <div class="no-results">
+                    <p>Click "Show Diagnostic Skeleton" to test loading state.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Panel Test Card -->
+        <div class="weather-panel">
+            <h2>Weather Panel Test</h2>
+            <div class="weather-grid" id="testWeatherGrid">
+                <div class="weather-item">
+                    <i class="weather-icon" data-lucide="thermometer"></i>
+                    <div class="weather-data">
+                        <label>Temperature</label>
+                        <span class="weather-value">25°C</span>
+                    </div>
+                </div>
+                <div class="weather-item">
+                    <i class="weather-icon" data-lucide="droplets"></i>
+                    <div class="weather-data">
+                        <label>Humidity</label>
+                        <span class="weather-value">65%</span>
+                    </div>
+                </div>
+                <div class="weather-item">
+                    <i class="weather-icon" data-lucide="gauge"></i>
+                    <div class="weather-data">
+                        <label>Pressure</label>
+                        <span class="weather-value">1013 mb</span>
+                    </div>
+                </div>
+                <div class="weather-item">
+                    <i class="weather-icon" data-lucide="wind"></i>
+                    <div class="weather-data">
+                        <label>Wind</label>
+                        <span class="weather-value">12 kts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spinner Overlay (Hidden by default) -->
+    <div id="testSpinnerOverlay" class="spinner-overlay" style="display: none;">
+        <div class="spinner-modern"></div>
+        <div class="spinner-message">Loading test data...</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script>
+        // Testing Tool JavaScript
+
+        // State tracking
+        let gaugeSkeletonVisible = false;
+        let diagSkeletonVisible = false;
+        let weatherSkeletonVisible = false;
+        let spinnerVisible = false;
+
+        // Update button indicators
+        function updateIndicator(buttonId, isActive) {
+            const button = document.getElementById(buttonId);
+            const indicator = button.querySelector('.status-indicator-test');
+            if (isActive) {
+                indicator.classList.remove('inactive');
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+                indicator.classList.add('inactive');
+            }
+        }
+
+        // Gauge skeleton tests
+        document.getElementById('testGaugeShow').addEventListener('click', () => {
+            showGaugeSkeletons();
+            gaugeSkeletonVisible = true;
+            updateIndicator('testGaugeShow', true);
+            updateIndicator('testGaugeHide', false);
+        });
+
+        document.getElementById('testGaugeHide').addEventListener('click', () => {
+            hideGaugeSkeletons();
+            gaugeSkeletonVisible = false;
+            updateIndicator('testGaugeShow', false);
+            updateIndicator('testGaugeHide', true);
+        });
+
+        document.getElementById('testGaugeToggle').addEventListener('click', () => {
+            if (gaugeSkeletonVisible) {
+                hideGaugeSkeletons();
+                gaugeSkeletonVisible = false;
+                updateIndicator('testGaugeShow', false);
+            } else {
+                showGaugeSkeletons();
+                gaugeSkeletonVisible = true;
+                updateIndicator('testGaugeShow', true);
+            }
+        });
+
+        // Diagnostic skeleton tests
+        document.getElementById('testDiagShow').addEventListener('click', () => {
+            const resultsContent = document.getElementById('testResultsContent');
+            resultsContent.innerHTML = `
+                <div class="skeleton-results" data-skeleton="results">
+                    <div class="skeleton-results-section">
+                        <div class="skeleton-text medium width-60"></div>
+                        <div class="skeleton-text width-100"></div>
+                        <div class="skeleton-text width-90"></div>
+                        <div class="skeleton-text width-80"></div>
+                    </div>
+                    <div class="skeleton-results-section">
+                        <div class="skeleton-text medium width-60"></div>
+                        <div class="skeleton-text width-100"></div>
+                        <div class="skeleton-text width-90"></div>
+                        <div class="skeleton-text width-80"></div>
+                        <div class="skeleton-text width-70"></div>
+                    </div>
+                </div>
+            `;
+            diagSkeletonVisible = true;
+            updateIndicator('testDiagShow', true);
+            updateIndicator('testDiagHide', false);
+        });
+
+        document.getElementById('testDiagHide').addEventListener('click', () => {
+            hideDiagnosticLoading();
+            setTimeout(() => {
+                const resultsContent = document.getElementById('testResultsContent');
+                resultsContent.innerHTML = `
+                    <div class="troubleshooting-steps">
+                        <h3>📋 Sample Troubleshooting Steps</h3>
+                        <ol>
+                            <li>Check battery voltage at rest (should be 12.6V)</li>
+                            <li>Test alternator output with engine running (14.2-14.4V)</li>
+                            <li>Verify circuit breakers are closed</li>
+                        </ol>
+                    </div>
+                `;
+            }, 300);
+            diagSkeletonVisible = false;
+            updateIndicator('testDiagShow', false);
+            updateIndicator('testDiagHide', true);
+        });
+
+        document.getElementById('testDiagToggle').addEventListener('click', () => {
+            if (diagSkeletonVisible) {
+                document.getElementById('testDiagHide').click();
+            } else {
+                document.getElementById('testDiagShow').click();
+            }
+        });
+
+        // Weather skeleton tests
+        document.getElementById('testWeatherShow').addEventListener('click', () => {
+            showWeatherSkeleton();
+            weatherSkeletonVisible = true;
+            updateIndicator('testWeatherShow', true);
+            updateIndicator('testWeatherHide', false);
+        });
+
+        document.getElementById('testWeatherHide').addEventListener('click', () => {
+            hideWeatherSkeleton();
+            setTimeout(() => {
+                const weatherGrid = document.getElementById('testWeatherGrid');
+                weatherGrid.innerHTML = `
+                    <div class="weather-item fade-in">
+                        <i class="weather-icon" data-lucide="thermometer"></i>
+                        <div class="weather-data">
+                            <label>Temperature</label>
+                            <span class="weather-value">25°C</span>
+                        </div>
+                    </div>
+                    <div class="weather-item fade-in">
+                        <i class="weather-icon" data-lucide="droplets"></i>
+                        <div class="weather-data">
+                            <label>Humidity</label>
+                            <span class="weather-value">65%</span>
+                        </div>
+                    </div>
+                    <div class="weather-item fade-in">
+                        <i class="weather-icon" data-lucide="gauge"></i>
+                        <div class="weather-data">
+                            <label>Pressure</label>
+                            <span class="weather-value">1013 mb</span>
+                        </div>
+                    </div>
+                    <div class="weather-item fade-in">
+                        <i class="weather-icon" data-lucide="wind"></i>
+                        <div class="weather-data">
+                            <label>Wind</label>
+                            <span class="weather-value">12 kts</span>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+            }, 300);
+            weatherSkeletonVisible = false;
+            updateIndicator('testWeatherShow', false);
+            updateIndicator('testWeatherHide', true);
+        });
+
+        document.getElementById('testWeatherToggle').addEventListener('click', () => {
+            if (weatherSkeletonVisible) {
+                document.getElementById('testWeatherHide').click();
+            } else {
+                document.getElementById('testWeatherShow').click();
+            }
+        });
+
+        // Spinner tests
+        document.getElementById('testSpinnerShow').addEventListener('click', () => {
+            const overlay = document.getElementById('testSpinnerOverlay');
+            overlay.style.display = 'flex';
+            spinnerVisible = true;
+            updateIndicator('testSpinnerShow', true);
+            updateIndicator('testSpinnerHide', false);
+        });
+
+        document.getElementById('testSpinnerHide').addEventListener('click', () => {
+            const overlay = document.getElementById('testSpinnerOverlay');
+            overlay.style.display = 'none';
+            spinnerVisible = false;
+            updateIndicator('testSpinnerShow', false);
+            updateIndicator('testSpinnerHide', true);
+        });
+
+        // Animation speed control
+        const speedControl = document.getElementById('speedControl');
+        const speedValue = document.getElementById('speedValue');
+
+        speedControl.addEventListener('input', (e) => {
+            const speed = parseFloat(e.target.value);
+            speedValue.textContent = `${speed}x`;
+
+            // Adjust CSS animation speed
+            const duration = (1.5 / speed).toFixed(2);
+            document.documentElement.style.setProperty('--shimmer-duration', `${duration}s`);
+
+            // Update all skeleton animations
+            document.querySelectorAll('.skeleton, .skeleton-gauge, .skeleton-text, .skeleton-weather-icon').forEach(el => {
+                el.style.animationDuration = `${duration}s`;
+            });
+        });
+
+        // Initialize test gauge
+        const testGauge = createChartJsGauge(document.getElementById('testGauge'), {
+            minValue: 10.5,
+            maxValue: 14.4,
+            label: 'Test Battery',
+            unit: 'V'
+        });
+        testGauge.setValue(12.6);
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        console.log('[Test Tool] Loading States Testing Tool initialized');
+    </script>
+</body>
+</html>

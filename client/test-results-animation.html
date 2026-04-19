@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Panel Animation Testing Tool - Sprint 3 Task 3.3</title>
+
+    <!-- Import main styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Testing Tool Specific Styles */
+        body {
+            padding: 2rem;
+            background: linear-gradient(135deg, #0a1929 0%, #05101a 100%);
+        }
+
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            background: rgba(30, 35, 48, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .test-header h1 {
+            color: #4ecdc4;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-header p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        .controls-panel {
+            background: rgba(30, 35, 48, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group {
+            background: rgba(38, 53, 69, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .control-group h3 {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-btn {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #4ecdc4, #3db8af);
+            color: #0a1929;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(78, 205, 196, 0.4);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .control-btn.secondary {
+            background: #263545;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+        }
+
+        .control-btn.secondary:hover {
+            background: #2a3142;
+            border-color: #4ecdc4;
+        }
+
+        .slider-control {
+            margin-top: 1rem;
+        }
+
+        .slider-control label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-control input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider-control input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            display: inline-block;
+            margin-left: 0.5rem;
+            color: #4ecdc4;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-section {
+            background: rgba(30, 35, 48, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .demo-section h2 {
+            color: #4ecdc4;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .timing-diagram {
+            background: rgba(38, 53, 69, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-indicator.active {
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .status-indicator.inactive {
+            background: #64748b;
+        }
+
+        .results-panel-demo {
+            min-height: 400px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- Header -->
+        <div class="test-header">
+            <h1>🎬 Results Panel Animation Testing Tool</h1>
+            <p><strong>Sprint 3 Task 3.3</strong> - Staggered slide-in animations for diagnostic results</p>
+            <p style="font-size: 0.875rem; color: #94a3b8;">
+                This tool allows you to test and replay the results panel entrance animation with staggered section reveals.
+                Use the controls below to trigger animations manually and adjust timing parameters.
+            </p>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="controls-grid">
+                <div class="control-group">
+                    <h3>Animation Sequence</h3>
+                    <button class="control-btn" onclick="playFullSequence()">
+                        ▶️ Play Full Sequence
+                    </button>
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;">
+                        Skeleton (300ms) → Results slide-in (400ms) with section stagger
+                    </p>
+                </div>
+
+                <div class="control-group">
+                    <h3>Individual Components</h3>
+                    <button class="control-btn secondary" onclick="showResultsPanel()">
+                        Show Results Panel
+                    </button>
+                    <button class="control-btn secondary" onclick="hideResultsPanel()" style="margin-top: 0.5rem;">
+                        Hide Results Panel
+                    </button>
+                </div>
+
+                <div class="control-group">
+                    <h3>Animation Controls</h3>
+                    <button class="control-btn secondary" onclick="resetAnimation()">
+                        🔄 Reset Animation
+                    </button>
+                    <button class="control-btn secondary" onclick="toggleSlowMotion()" style="margin-top: 0.5rem;">
+                        <span id="slowMotionLabel">🐌 Slow Motion (2x)</span>
+                    </button>
+                </div>
+
+                <div class="control-group">
+                    <h3>Stagger Timing</h3>
+                    <div class="slider-control">
+                        <label>
+                            Section Delay: <span class="slider-value" id="sectionDelayValue">100ms</span>
+                        </label>
+                        <input type="range" id="sectionDelay" min="0" max="300" value="100" step="50"
+                               oninput="updateSectionDelay(this.value)">
+                    </div>
+                    <div class="slider-control">
+                        <label>
+                            Item Delay: <span class="slider-value" id="itemDelayValue">50ms</span>
+                        </label>
+                        <input type="range" id="itemDelay" min="0" max="150" value="50" step="25"
+                               oninput="updateItemDelay(this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="timing-diagram" id="timingDiagram">
+Timeline (Full Sequence):
+[0ms]    Form submit → Show skeleton
+[0-300ms] Skeleton shimmer animation
+[300ms]  Skeleton fade-out starts
+[350ms]  Results panel slide-in starts (20px → 0px)
+[350ms]  Section 1 (Safety) fade-up (0ms delay)
+[450ms]  Section 2 (Troubleshooting) fade-up (100ms delay)
+[550ms]  Section 3 (Recommendations) fade-up (200ms delay)
+[750ms]  All animations complete
+            </div>
+        </div>
+
+        <!-- Demo Grid -->
+        <div class="demo-grid">
+            <!-- Results Panel Demo -->
+            <div class="demo-section">
+                <h2>Results Panel (Animated)</h2>
+                <div class="results-panel results-panel-demo" aria-label="Diagnostic Results" aria-live="polite">
+                    <h2>Diagnostic Results</h2>
+                    <div id="resultsContent" class="results-content">
+                        <!-- Safety Warnings -->
+                        <div id="safetyWarnings" class="safety-warnings" style="display: block;">
+                            <h3>⚠️ Safety Warnings</h3>
+                            <ul id="warningsList">
+                                <li>Disconnect battery before performing electrical work</li>
+                                <li>Use insulated tools when testing alternator output</li>
+                                <li>Do not operate aircraft with known electrical faults</li>
+                            </ul>
+                        </div>
+
+                        <!-- Troubleshooting Steps -->
+                        <div id="troubleshootingSteps" class="troubleshooting-steps" style="display: block;">
+                            <h3>📋 Troubleshooting Steps</h3>
+                            <ol id="stepsList">
+                                <li>Check battery voltage at rest (should be 12.6V for 12V system)</li>
+                                <li>Verify alternator output voltage with engine running (14.2-14.4V)</li>
+                                <li>Inspect main bus voltage under load conditions</li>
+                                <li>Test circuit breakers for continuity and proper operation</li>
+                                <li>Examine wiring harness for corrosion or damage</li>
+                            </ol>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div id="recommendations" class="recommendations" style="display: block;">
+                            <h3>💡 Recommendations</h3>
+                            <ul id="recommendationsList">
+                                <li>Replace battery if voltage drops below 11.8V at rest</li>
+                                <li>Clean and tighten all electrical connections</li>
+                                <li>Document findings in aircraft maintenance log</li>
+                                <li>Retest system after repairs to verify proper operation</li>
+                            </ul>
+                        </div>
+
+                        <!-- No Results -->
+                        <div id="noResults" class="no-results" style="display: none;">
+                            <p>Submit a diagnostic request to see results.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="demo-section">
+                <h2>Performance Metrics</h2>
+                <div class="control-group" style="margin-bottom: 1rem;">
+                    <h3>Animation Status</h3>
+                    <p>
+                        <span class="status-indicator" id="panelStatus"></span>
+                        Panel Entrance: <span id="panelStatusText">Ready</span>
+                    </p>
+                    <p>
+                        <span class="status-indicator" id="sectionStatus"></span>
+                        Section Stagger: <span id="sectionStatusText">Ready</span>
+                    </p>
+                    <p>
+                        <span class="status-indicator" id="itemStatus"></span>
+                        Item Animations: <span id="itemStatusText">Ready</span>
+                    </p>
+                </div>
+
+                <div class="control-group" style="margin-bottom: 1rem;">
+                    <h3>Timing Configuration</h3>
+                    <p style="font-size: 0.875rem; color: #cbd5e1;">
+                        <strong>Panel Duration:</strong> 400ms<br>
+                        <strong>Section Duration:</strong> 350ms<br>
+                        <strong>Section Stagger:</strong> <span id="currentSectionDelay">100ms</span><br>
+                        <strong>Item Duration:</strong> 250ms<br>
+                        <strong>Item Stagger:</strong> <span id="currentItemDelay">50ms</span><br>
+                        <strong>Total Sequence:</strong> <span id="totalDuration">~750ms</span>
+                    </p>
+                </div>
+
+                <div class="control-group">
+                    <h3>Acceptance Criteria ✓</h3>
+                    <p style="font-size: 0.875rem; color: #10b981;">
+                        ✅ Panel slides from right (20px → 0px)<br>
+                        ✅ Sections stagger with configurable delay<br>
+                        ✅ Items fade-up within sections (first 5)<br>
+                        ✅ Coordination with skeleton loader (350ms wait)<br>
+                        ✅ Animations respect prefers-reduced-motion<br>
+                        ✅ GPU-accelerated (transform + opacity only)
+                    </p>
+                </div>
+
+                <div class="control-group">
+                    <h3>Testing Checklist</h3>
+                    <div style="font-size: 0.875rem; color: #cbd5e1;">
+                        <label style="display: block; margin-bottom: 0.5rem;">
+                            <input type="checkbox"> Panel slides smoothly from right
+                        </label>
+                        <label style="display: block; margin-bottom: 0.5rem;">
+                            <input type="checkbox"> Sections appear with 100ms stagger
+                        </label>
+                        <label style="display: block; margin-bottom: 0.5rem;">
+                            <input type="checkbox"> No layout shift during animations
+                        </label>
+                        <label style="display: block; margin-bottom: 0.5rem;">
+                            <input type="checkbox"> Animations maintain 60fps
+                        </label>
+                        <label style="display: block; margin-bottom: 0.5rem;">
+                            <input type="checkbox"> Slow motion mode works correctly
+                        </label>
+                        <label style="display: block; margin-bottom: 0.5rem;">
+                            <input type="checkbox"> Stagger delays are adjustable
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; color: #64748b; font-size: 0.875rem; padding: 2rem;">
+            <p><strong>Sprint 3 Task 3.3</strong> - Results Panel Animation</p>
+            <p>Aircraft Electrical Fault Analyzer - Frontend Redesign</p>
+        </div>
+    </div>
+
+    <script>
+        // Animation state
+        let slowMotionEnabled = false;
+        let sectionDelayMs = 100;
+        let itemDelayMs = 50;
+
+        // Get DOM elements
+        const resultsPanel = document.querySelector('.results-panel-demo');
+        const safetyWarnings = document.getElementById('safetyWarnings');
+        const troubleshootingSteps = document.getElementById('troubleshootingSteps');
+        const recommendations = document.getElementById('recommendations');
+        const panelStatus = document.getElementById('panelStatus');
+        const panelStatusText = document.getElementById('panelStatusText');
+        const sectionStatus = document.getElementById('sectionStatus');
+        const sectionStatusText = document.getElementById('sectionStatusText');
+        const itemStatus = document.getElementById('itemStatus');
+        const itemStatusText = document.getElementById('itemStatusText');
+
+        /**
+         * Play full animation sequence (skeleton → results)
+         */
+        function playFullSequence() {
+            resetAnimation();
+
+            // Update status
+            updateStatus('panel', 'active', 'Waiting for skeleton fade-out...');
+
+            // Simulate skeleton fade-out (300ms) + buffer (50ms)
+            setTimeout(() => {
+                showResultsPanel();
+            }, 350);
+        }
+
+        /**
+         * Show results panel with staggered animations
+         */
+        function showResultsPanel() {
+            resetAnimation();
+
+            const speedMultiplier = slowMotionEnabled ? 2 : 1;
+
+            // Panel entrance
+            updateStatus('panel', 'active', 'Sliding in from right');
+            resultsPanel.classList.add('results-panel-enter');
+
+            // Section stagger
+            const sections = [
+                { element: safetyWarnings, name: 'Safety Warnings', stagger: 1 },
+                { element: troubleshootingSteps, name: 'Troubleshooting', stagger: 2 },
+                { element: recommendations, name: 'Recommendations', stagger: 3 }
+            ];
+
+            updateStatus('section', 'active', 'Staggering sections');
+
+            sections.forEach(({ element, name, stagger }) => {
+                element.classList.add('fade-in-up', `stagger-${stagger}`);
+            });
+
+            // Item animations
+            updateStatus('item', 'active', 'Animating items');
+            const allLists = [
+                document.querySelector('#warningsList'),
+                document.querySelector('#stepsList'),
+                document.querySelector('#recommendationsList')
+            ];
+
+            allLists.forEach(list => {
+                const items = list.querySelectorAll('li');
+                items.forEach((item, index) => {
+                    if (index < 5) {
+                        item.classList.add('fade-in-item', `item-stagger-${index + 1}`);
+                    }
+                });
+            });
+
+            // Apply slow motion if enabled
+            if (slowMotionEnabled) {
+                applySlowMotion();
+            }
+
+            // Update status when complete
+            const totalDuration = (350 + sectionDelayMs * 2 + itemDelayMs * 5) * speedMultiplier;
+            setTimeout(() => {
+                updateStatus('panel', 'inactive', 'Complete');
+                updateStatus('section', 'inactive', 'Complete');
+                updateStatus('item', 'inactive', 'Complete');
+            }, totalDuration);
+        }
+
+        /**
+         * Hide results panel
+         */
+        function hideResultsPanel() {
+            resetAnimation();
+            updateStatus('panel', 'inactive', 'Hidden');
+            updateStatus('section', 'inactive', 'Hidden');
+            updateStatus('item', 'inactive', 'Hidden');
+        }
+
+        /**
+         * Reset all animations
+         */
+        function resetAnimation() {
+            // Remove panel classes
+            resultsPanel.classList.remove('results-panel-enter');
+
+            // Remove section classes
+            [safetyWarnings, troubleshootingSteps, recommendations].forEach(section => {
+                section.classList.remove('fade-in-up', 'stagger-1', 'stagger-2', 'stagger-3');
+            });
+
+            // Remove item classes
+            const allItems = document.querySelectorAll('.results-content li');
+            allItems.forEach(item => {
+                item.classList.remove('fade-in-item', 'item-stagger-1', 'item-stagger-2', 'item-stagger-3', 'item-stagger-4', 'item-stagger-5');
+            });
+
+            // Remove slow motion
+            if (slowMotionEnabled) {
+                removeSlowMotion();
+            }
+
+            // Update status
+            updateStatus('panel', 'inactive', 'Ready');
+            updateStatus('section', 'inactive', 'Ready');
+            updateStatus('item', 'inactive', 'Ready');
+        }
+
+        /**
+         * Toggle slow motion mode (2x slower)
+         */
+        function toggleSlowMotion() {
+            slowMotionEnabled = !slowMotionEnabled;
+            const label = document.getElementById('slowMotionLabel');
+
+            if (slowMotionEnabled) {
+                label.textContent = '🚀 Normal Speed';
+                applySlowMotion();
+            } else {
+                label.textContent = '🐌 Slow Motion (2x)';
+                removeSlowMotion();
+            }
+        }
+
+        /**
+         * Apply 2x slow motion to all animations
+         */
+        function applySlowMotion() {
+            const style = document.createElement('style');
+            style.id = 'slowMotionStyles';
+            style.textContent = `
+                .results-panel-enter {
+                    animation-duration: 800ms !important;
+                }
+                .fade-in-up {
+                    animation-duration: 700ms !important;
+                }
+                .fade-in-item {
+                    animation-duration: 500ms !important;
+                }
+                .stagger-1 { animation-delay: 0ms !important; }
+                .stagger-2 { animation-delay: ${sectionDelayMs * 2}ms !important; }
+                .stagger-3 { animation-delay: ${sectionDelayMs * 4}ms !important; }
+                .item-stagger-1 { animation-delay: ${itemDelayMs * 2}ms !important; }
+                .item-stagger-2 { animation-delay: ${itemDelayMs * 4}ms !important; }
+                .item-stagger-3 { animation-delay: ${itemDelayMs * 6}ms !important; }
+                .item-stagger-4 { animation-delay: ${itemDelayMs * 8}ms !important; }
+                .item-stagger-5 { animation-delay: ${itemDelayMs * 10}ms !important; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        /**
+         * Remove slow motion styles
+         */
+        function removeSlowMotion() {
+            const slowMotionStyles = document.getElementById('slowMotionStyles');
+            if (slowMotionStyles) {
+                slowMotionStyles.remove();
+            }
+        }
+
+        /**
+         * Update section delay dynamically
+         */
+        function updateSectionDelay(value) {
+            sectionDelayMs = parseInt(value);
+            document.getElementById('sectionDelayValue').textContent = `${sectionDelayMs}ms`;
+            document.getElementById('currentSectionDelay').textContent = `${sectionDelayMs}ms`;
+            updateTotalDuration();
+            updateTimingDiagram();
+
+            // Update stagger classes
+            const style = document.createElement('style');
+            style.id = 'dynamicSectionStagger';
+            const existingStyle = document.getElementById('dynamicSectionStagger');
+            if (existingStyle) existingStyle.remove();
+
+            style.textContent = `
+                .stagger-2 { animation-delay: ${sectionDelayMs}ms !important; }
+                .stagger-3 { animation-delay: ${sectionDelayMs * 2}ms !important; }
+                .stagger-4 { animation-delay: ${sectionDelayMs * 3}ms !important; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        /**
+         * Update item delay dynamically
+         */
+        function updateItemDelay(value) {
+            itemDelayMs = parseInt(value);
+            document.getElementById('itemDelayValue').textContent = `${itemDelayMs}ms`;
+            document.getElementById('currentItemDelay').textContent = `${itemDelayMs}ms`;
+            updateTotalDuration();
+
+            // Update item stagger classes
+            const style = document.createElement('style');
+            style.id = 'dynamicItemStagger';
+            const existingStyle = document.getElementById('dynamicItemStagger');
+            if (existingStyle) existingStyle.remove();
+
+            style.textContent = `
+                .item-stagger-1 { animation-delay: ${itemDelayMs}ms !important; }
+                .item-stagger-2 { animation-delay: ${itemDelayMs * 2}ms !important; }
+                .item-stagger-3 { animation-delay: ${itemDelayMs * 3}ms !important; }
+                .item-stagger-4 { animation-delay: ${itemDelayMs * 4}ms !important; }
+                .item-stagger-5 { animation-delay: ${itemDelayMs * 5}ms !important; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        /**
+         * Update total sequence duration calculation
+         */
+        function updateTotalDuration() {
+            const total = 350 + 350 + (sectionDelayMs * 2) + (itemDelayMs * 5);
+            document.getElementById('totalDuration').textContent = `~${total}ms`;
+        }
+
+        /**
+         * Update timing diagram with current settings
+         */
+        function updateTimingDiagram() {
+            const section2Start = 350 + sectionDelayMs;
+            const section3Start = 350 + (sectionDelayMs * 2);
+            const completionTime = section3Start + 350;
+
+            document.getElementById('timingDiagram').textContent = `Timeline (Full Sequence):
+[0ms]    Form submit → Show skeleton
+[0-300ms] Skeleton shimmer animation
+[300ms]  Skeleton fade-out starts
+[350ms]  Results panel slide-in starts (20px → 0px)
+[350ms]  Section 1 (Safety) fade-up (0ms delay)
+[${section2Start}ms]  Section 2 (Troubleshooting) fade-up (${sectionDelayMs}ms delay)
+[${section3Start}ms]  Section 3 (Recommendations) fade-up (${sectionDelayMs * 2}ms delay)
+[${completionTime}ms]  All animations complete`;
+        }
+
+        /**
+         * Update status indicators
+         */
+        function updateStatus(type, state, text) {
+            const statusIndicator = type === 'panel' ? panelStatus :
+                                   type === 'section' ? sectionStatus : itemStatus;
+            const statusText = type === 'panel' ? panelStatusText :
+                              type === 'section' ? sectionStatusText : itemStatusText;
+
+            statusIndicator.className = `status-indicator ${state}`;
+            statusText.textContent = text;
+        }
+
+        // Initialize
+        updateTotalDuration();
+        updateTimingDiagram();
+    </script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aircraft Electrical Fault Analyzer - Intelligent diagnostic system for aircraft electrical problems">
+    <title>Aircraft Electrical Fault Analyzer - SCAD ITGM 522</title>
+
+    <!-- Google Fonts - Professional Aviation Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-v2.css?v=8">
+
+    <!-- Chart.js Library - Modern Gauge Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Icon System - Professional SVG Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="title-section">
+                <h1>Aircraft Electrical Fault Analyzer</h1>
+                <span class="subtitle">SCAD ITGM 522 Project 3</span>
+            </div>
+            <div class="status-bar">
+                <div class="connection-status connected" id="connectionStatusBadge">
+                    <span class="badge-icon">●</span>
+                    <span>Connected</span>
+                </div>
+                <div class="timestamp" id="systemTime">--:--:--</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-container">
+        <!-- System Status Panel (Left) -->
+        <section class="system-status-panel" aria-label="System Status">
+            <h2>Electrical System Status</h2>
+
+            <!-- Battery Status -->
+            <div class="status-card battery-status">
+                <h3>Battery System</h3>
+                <div class="gauge-container">
+                    <div class="vgauge" data-min="10.5" data-max="14.4" data-source="batteryVoltage" aria-hidden="true">
+                        <ul class="vgauge-ticks ticks-left">
+                            <li>14.4</li><li>13.5</li><li>12.6</li><li>11.5</li><li>10.5</li>
+                        </ul>
+                        <div class="vgauge-track">
+                            <div class="vgauge-fill"></div>
+                            <div class="vgauge-marker"></div>
+                        </div>
+                        <span></span>
+                    </div>
+                    <canvas id="batteryGauge" width="200" height="200" aria-label="Battery voltage gauge"></canvas>
+                    <div class="gauge-readout">
+                        <span class="label">Voltage</span>
+                        <div class="gauge-value">
+                            <span id="batteryVoltage" class="value">--</span>
+                            <span class="unit">V</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-details">
+                    <div class="status-item">
+                        <span class="label">State:</span>
+                        <div class="status-badge battery-state-badge badge-normal">
+                            <span class="badge-icon">✓</span>
+                            <span>GOOD</span>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">Health:</span>
+                        <div class="health-bar-container">
+                            <div id="batteryHealth" class="health-bar-fill">
+                                <span class="health-bar-text" id="batteryHealthText">--%</span>
+                            </div>
+                        </div>
+                        <span id="batteryHealthValue" class="value">--%</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">Temperature:</span>
+                        <span id="batteryTemp" class="value">--°C</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alternator Status -->
+            <div class="status-card alternator-status">
+                <h3>Alternator System</h3>
+                <div class="gauge-container">
+                    <div class="vgauge" data-min="0" data-max="16" data-source="alternatorVoltage" aria-hidden="true">
+                        <ul class="vgauge-ticks ticks-left">
+                            <li>16</li><li>12</li><li>8</li><li>4</li><li>0</li>
+                        </ul>
+                        <div class="vgauge-track">
+                            <div class="vgauge-fill"></div>
+                            <div class="vgauge-marker"></div>
+                        </div>
+                        <span></span>
+                    </div>
+                    <canvas id="alternatorGauge" width="200" height="200" aria-label="Alternator output gauge"></canvas>
+                    <div class="gauge-readout">
+                        <span class="label">Output</span>
+                        <div class="gauge-value">
+                            <span id="alternatorVoltage" class="value">--</span>
+                            <span class="unit">V</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-details">
+                    <div class="status-item">
+                        <span class="label">State:</span>
+                        <div class="status-badge alternator-state-badge badge-charging">
+                            <span class="badge-icon">⚡</span>
+                            <span>CHARGING</span>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">Field Voltage:</span>
+                        <span id="fieldVoltage" class="value">-- V</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">Output Current:</span>
+                        <span id="alternatorCurrent" class="value">-- A</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bus Systems -->
+            <div class="status-card bus-systems">
+                <h3>Bus Systems</h3>
+                <div class="bus-container">
+                    <!-- Main Bus -->
+                    <div class="bus-status main-bus">
+                        <h4>Main Bus</h4>
+                        <div class="bus-details">
+                            <div class="status-item">
+                                <span class="label">Voltage:</span>
+                                <span id="mainBusVoltage" class="value">-- V</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">Load:</span>
+                                <span id="mainBusLoad" class="value">-- A</span>
+                            </div>
+                        </div>
+                        <div class="circuit-breakers">
+                            <h5>Circuit Breakers</h5>
+                            <div id="mainBusBreakers" class="breaker-grid">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Essential Bus -->
+                    <div class="bus-status essential-bus">
+                        <h4>Essential Bus</h4>
+                        <div class="bus-details">
+                            <div class="status-item">
+                                <span class="label">Voltage:</span>
+                                <span id="essentialBusVoltage" class="value">-- V</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">Load:</span>
+                                <span id="essentialBusLoad" class="value">-- A</span>
+                            </div>
+                        </div>
+                        <div class="circuit-breakers">
+                            <h5>Circuit Breakers</h5>
+                            <div id="essentialBusBreakers" class="breaker-grid">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total System Load -->
+                <div class="total-load">
+                    <span class="label">Total System Load:</span>
+                    <span id="totalSystemLoad" class="value">-- A</span>
+                </div>
+            </div>
+
+            <!-- Fault Injection Controls (moved from page footer into left column) -->
+            <div class="fault-controls">
+                <div class="controls-container">
+                    <h3>Training Mode · Fault Injection</h3>
+                    <div class="fault-buttons">
+                        <button class="btn btn-fault" data-fault="dead_battery" aria-label="Inject dead battery fault">
+                            <i class="btn-icon" data-lucide="battery-low" aria-hidden="true"></i>
+                            Dead Batt
+                        </button>
+                        <button class="btn btn-fault" data-fault="alternator_failure" aria-label="Inject alternator failure">
+                            <i class="btn-icon" data-lucide="zap-off" aria-hidden="true"></i>
+                            Alt Fault
+                        </button>
+                        <button class="btn btn-fault" data-fault="bus_fault" aria-label="Inject bus fault">
+                            <i class="btn-icon" data-lucide="plug-zap" aria-hidden="true"></i>
+                            Bus Fault
+                        </button>
+                        <button class="btn btn-fault" data-fault="circuit_breaker_trip" aria-label="Inject circuit breaker trip">
+                            <i class="btn-icon" data-lucide="shield-alert" aria-hidden="true"></i>
+                            CB Trip
+                        </button>
+                        <button class="btn btn-clear" id="clearFaultsBtn" aria-label="Clear all faults">
+                            <i class="btn-icon" data-lucide="refresh-ccw" aria-hidden="true"></i>
+                            Clear All
+                        </button>
+                    </div>
+                    <div class="fault-status">
+                        <span>Active Fault:</span>
+                        <span id="activeFault" class="fault-indicator">None</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel Container -->
+        <div class="right-panel">
+            <!-- Environmental Conditions Panel -->
+            <section class="weather-panel" aria-label="Environmental Conditions">
+                <h2>Environmental Conditions</h2>
+                <div class="weather-source-info">
+                    <span class="weather-source" id="weatherSource">Loading...</span>
+                </div>
+                <div class="weather-grid">
+                    <div class="weather-item">
+                        <i class="weather-icon" data-lucide="thermometer" aria-hidden="true"></i>
+                        <div class="weather-data">
+                            <label>Temperature</label>
+                            <span class="weather-value" id="temperature">-- °C</span>
+                        </div>
+                    </div>
+                    <div class="weather-item">
+                        <i class="weather-icon" data-lucide="droplets" aria-hidden="true"></i>
+                        <div class="weather-data">
+                            <label>Humidity</label>
+                            <span class="weather-value" id="humidity">-- %</span>
+                        </div>
+                    </div>
+                    <div class="weather-item">
+                        <i class="weather-icon" data-lucide="gauge" aria-hidden="true"></i>
+                        <div class="weather-data">
+                            <label>Pressure</label>
+                            <span class="weather-value" id="pressure">---- mb</span>
+                        </div>
+                    </div>
+                    <div class="weather-item">
+                        <i class="weather-icon" data-lucide="wind" aria-hidden="true"></i>
+                        <div class="weather-data">
+                            <label>Wind</label>
+                            <span class="weather-value" id="wind">-- kts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="temperature-effects">
+                    <h3>Temperature Effects on Electrical System</h3>
+                    <div class="effects-grid">
+                        <div class="effect-item">
+                            <label>Battery Capacity</label>
+                            <span id="batteryCapacityEffect" class="effect-value">--%</span>
+                        </div>
+                        <div class="effect-item">
+                            <label>Alternator Efficiency</label>
+                            <span id="alternatorEfficiency" class="effect-value">--%</span>
+                        </div>
+                        <div class="effect-item">
+                            <label>Corrected Voltage</label>
+                            <span id="correctedVoltage" class="effect-value">-- V</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location (moved from Diagnostic Input) -->
+                <div class="location-row">
+                    <div class="form-group">
+                        <label for="locationInput">Location (ICAO)</label>
+                        <div class="location-input-wrap">
+                            <input
+                                type="text"
+                                id="locationInput"
+                                name="location"
+                                maxlength="4"
+                                placeholder="KATL"
+                                aria-describedby="locationHelp">
+                            <button type="button" class="btn-get-weather" id="refreshWeather" aria-label="Fetch weather for this ICAO">Get</button>
+                        </div>
+                        <small id="locationHelp" class="help-text">Optional: 4-letter airport code</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Input Panel -->
+            <section class="diagnostic-panel" aria-label="Diagnostic Input">
+                <h2>Diagnostic Input</h2>
+                <form id="diagnosticForm" class="diagnostic-form">
+                    <div class="form-group">
+                        <label for="symptoms">Describe Symptoms</label>
+                        <textarea
+                            id="symptoms"
+                            name="symptoms"
+                            rows="4"
+                            placeholder="Example: Battery voltage drops when landing lights are turned on. Ammeter shows discharge during cruise flight..."
+                            required
+                            aria-required="true"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="batteryVoltageInput">Battery Voltage (V)</label>
+                            <input
+                                type="number"
+                                id="batteryVoltageInput"
+                                name="batteryVoltage"
+                                step="0.1"
+                                min="0"
+                                max="30"
+                                placeholder="12.6"
+                                aria-describedby="batteryVoltageHelp">
+                            <small id="batteryVoltageHelp" class="help-text">Measured at rest</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alternatorOutputInput">Alternator Output (V)</label>
+                            <input
+                                type="number"
+                                id="alternatorOutputInput"
+                                name="alternatorOutput"
+                                step="0.1"
+                                min="0"
+                                max="30"
+                                placeholder="14.2"
+                                aria-describedby="alternatorOutputHelp">
+                            <small id="alternatorOutputHelp" class="help-text">Engine running</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ambientTempInput">Ambient Temp (°C)</label>
+                            <input
+                                type="number"
+                                id="ambientTempInput"
+                                name="ambientTemp"
+                                step="1"
+                                min="-50"
+                                max="60"
+                                placeholder="25">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aircraftType">Aircraft Type</label>
+                            <select id="aircraftType" name="aircraftType" required aria-required="true">
+                                <option value="">Select aircraft...</option>
+                                <option value="Cessna 172">Cessna 172</option>
+                                <option value="Piper PA-28">Piper PA-28</option>
+                                <option value="Beechcraft Bonanza">Beechcraft Bonanza</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-diagnose" id="diagnoseBtn">
+                        <i class="btn-icon" data-lucide="search" aria-hidden="true"></i>
+                        Diagnose Problem
+                    </button>
+                </form>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Diagnostic Results Modal (shown after Diagnose Problem submit) -->
+    <div class="results-modal" id="resultsModal" role="dialog" aria-modal="true" aria-label="Diagnostic Results" aria-hidden="true">
+        <div class="results-modal-backdrop" data-modal-dismiss></div>
+        <section class="results-modal-panel" aria-live="polite">
+            <header class="results-modal-header">
+                <h2>Diagnostic Results</h2>
+                <button type="button" class="results-modal-close" aria-label="Close diagnostic results" data-modal-dismiss>×</button>
+            </header>
+            <div id="resultsContent" class="results-content">
+                <!-- Safety Warnings -->
+                <div id="safetyWarnings" class="safety-warnings" style="display: none;">
+                    <h3>⚠️ Safety Warnings</h3>
+                    <ul id="warningsList"></ul>
+                </div>
+
+                <!-- Troubleshooting Steps -->
+                <div id="troubleshootingSteps" class="troubleshooting-steps" style="display: none;">
+                    <h3>📋 Troubleshooting Steps</h3>
+                    <ol id="stepsList"></ol>
+                </div>
+
+                <!-- Expected Results -->
+                <div id="expectedResults" class="expected-results" style="display: none;">
+                    <h3>✓ Expected Results</h3>
+                    <ul id="expectedList"></ul>
+                </div>
+
+                <!-- Recommendations -->
+                <div id="recommendations" class="recommendations" style="display: none;">
+                    <h3>💡 Recommendations</h3>
+                    <ul id="recommendationsList"></ul>
+                </div>
+
+                <!-- No Results Message (kept for app.js compatibility; hidden by CSS in modal) -->
+                <div id="noResults" class="no-results">
+                    <p>Submit a diagnostic request to see results.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- Loading Indicator -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing diagnostic request...</p>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification" role="alert" aria-live="assertive"></div>
+
+    <!-- Notification Container (Toast Notifications) -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="api-client.js"></script>
+    <script src="notifications.js"></script>
+    <script src="app.js"></script>
+    <script src="weather-module.js"></script>
+    <script src="theme-v2.js?v=8"</script>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        // Initialize all Lucide icons on page load
+        lucide.createIcons();
+    </script>
+</body>
+</html>

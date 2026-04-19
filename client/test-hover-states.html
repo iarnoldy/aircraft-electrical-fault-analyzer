@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hover States Testing Tool - Sprint 3 Task 3.1</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Chart.js for Gauges -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Icon System -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .test-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-color);
+        }
+
+        .test-section h2 {
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--accent-primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-description {
+            background: rgba(78, 205, 196, 0.1);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--accent-primary);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .performance-monitor {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-primary);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            min-width: 200px;
+            box-shadow: var(--shadow-xl);
+            z-index: 10000;
+        }
+
+        .performance-monitor h3 {
+            color: var(--accent-primary);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .perf-metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .perf-label {
+            color: var(--text-secondary);
+        }
+
+        .perf-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .perf-value.good {
+            color: var(--accent-success);
+        }
+
+        .perf-value.warning {
+            color: var(--accent-warning);
+        }
+
+        .perf-value.critical {
+            color: var(--accent-danger);
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .test-inputs {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .mini-gauge {
+            width: 150px;
+            height: 150px;
+        }
+
+        .test-card {
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Performance Monitor -->
+    <div class="performance-monitor">
+        <h3>Performance Monitor</h3>
+        <div class="perf-metric">
+            <span class="perf-label">FPS:</span>
+            <span class="perf-value good" id="fpsValue">60</span>
+        </div>
+        <div class="perf-metric">
+            <span class="perf-label">Frame Time:</span>
+            <span class="perf-value good" id="frameTime">16ms</span>
+        </div>
+        <div class="perf-metric">
+            <span class="perf-label">Status:</span>
+            <span class="perf-value good" id="perfStatus">Smooth</span>
+        </div>
+    </div>
+
+    <h1 style="text-align: center; margin-bottom: 2rem; color: var(--accent-primary);">
+        Hover States Testing Tool
+    </h1>
+    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+        Sprint 3 Task 3.1 - Interactive testing for all hover state enhancements
+    </p>
+
+    <!-- Card Hover Tests -->
+    <section class="test-section">
+        <h2>1. Card Hover States</h2>
+        <div class="test-description">
+            <strong>Expected Behavior:</strong> Cards should lift 2px with enhanced teal glow on hover.
+            Transition should be smooth at 250ms with no jank. Border should glow with teal accent.
+        </div>
+        <div class="test-grid">
+            <div class="status-card test-card">
+                <h3>Status Card Example</h3>
+                <p style="color: var(--text-secondary);">Hover over this card to test the lift and glow effect.</p>
+                <div class="status-item">
+                    <span class="label">Test Status:</span>
+                    <span class="value">Active</span>
+                </div>
+            </div>
+
+            <div class="weather-panel test-card">
+                <h3>Weather Panel</h3>
+                <p style="color: var(--text-secondary);">Testing weather panel hover state with glassmorphism.</p>
+            </div>
+
+            <div class="diagnostic-panel test-card">
+                <h3>Diagnostic Panel</h3>
+                <p style="color: var(--text-secondary);">Testing diagnostic panel hover with teal border glow.</p>
+            </div>
+
+            <div class="results-panel test-card">
+                <h3>Results Panel</h3>
+                <p style="color: var(--text-secondary);">Testing results panel hover effect.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gauge Hover Tests -->
+    <section class="test-section">
+        <h2>2. Gauge Container Hover States</h2>
+        <div class="test-description">
+            <strong>Expected Behavior:</strong> Gauge containers should lift 2px, scale to 102%, and increase
+            backdrop blur to 15px on hover. Teal border should brighten. Transition: 300ms smooth.
+        </div>
+        <div class="test-grid">
+            <div class="gauge-container mini-gauge">
+                <canvas id="testGauge1" width="150" height="150"></canvas>
+                <div class="gauge-value">
+                    <span class="value">24.5</span>
+                    <span class="unit">V</span>
+                </div>
+            </div>
+
+            <div class="gauge-container mini-gauge">
+                <canvas id="testGauge2" width="150" height="150"></canvas>
+                <div class="gauge-value">
+                    <span class="value">14.2</span>
+                    <span class="unit">V</span>
+                </div>
+            </div>
+
+            <div class="gauge-container mini-gauge">
+                <canvas id="testGauge3" width="150" height="150"></canvas>
+                <div class="gauge-value">
+                    <span class="value">28.8</span>
+                    <span class="unit">V</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Button Hover Tests -->
+    <section class="test-section">
+        <h2>3. Button Hover States</h2>
+        <div class="test-description">
+            <strong>Expected Behavior:</strong> Buttons should lift 3px with enhanced glow and brightness increase
+            (110%). Active state should scale down to 98%. Transition: 200ms snappy.
+        </div>
+        <div class="test-buttons">
+            <button class="btn">
+                <i data-lucide="search"></i>
+                Primary Button
+            </button>
+
+            <button class="btn btn-diagnose">
+                <i data-lucide="activity"></i>
+                Diagnose Button
+            </button>
+
+            <button class="btn btn-clear">
+                <i data-lucide="refresh-ccw"></i>
+                Clear Button
+            </button>
+        </div>
+
+        <h3 style="margin-top: 2rem; color: var(--text-secondary); font-size: 1rem;">Fault Buttons</h3>
+        <div class="test-buttons" style="margin-top: 1rem;">
+            <button class="btn btn-fault">
+                <i data-lucide="battery-low"></i>
+                Dead Battery
+            </button>
+
+            <button class="btn btn-fault">
+                <i data-lucide="zap-off"></i>
+                Alternator Failure
+            </button>
+
+            <button class="btn btn-fault">
+                <i data-lucide="plug-zap"></i>
+                Bus Fault
+            </button>
+
+            <button class="btn btn-fault">
+                <i data-lucide="shield-alert"></i>
+                Circuit Breaker Trip
+            </button>
+        </div>
+    </section>
+
+    <!-- Input Focus Tests -->
+    <section class="test-section">
+        <h2>4. Input Focus Animations</h2>
+        <div class="test-description">
+            <strong>Expected Behavior:</strong> Inputs should show teal border with 3px glow ring on focus.
+            Slight lift (1px) with smooth 200ms ease-out transition. Hover shows subtle glow.
+        </div>
+        <div class="test-inputs">
+            <div class="form-group">
+                <label>Text Input</label>
+                <input type="text" placeholder="Click to focus and test animation">
+            </div>
+
+            <div class="form-group">
+                <label>Number Input</label>
+                <input type="number" placeholder="12.6" step="0.1">
+            </div>
+
+            <div class="form-group">
+                <label>Textarea</label>
+                <textarea rows="3" placeholder="Type to test focus state animation"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Select Dropdown</label>
+                <select>
+                    <option value="">Select an option...</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Circuit Breaker Hover Tests -->
+    <section class="test-section">
+        <h2>5. Circuit Breaker Hover States</h2>
+        <div class="test-description">
+            <strong>Expected Behavior:</strong> Breakers should lift 2px with enhanced teal/red glow depending on state.
+            Border color should brighten on hover. Smooth transition with no jank.
+        </div>
+        <div class="breaker-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+            <div class="breaker closed">
+                <span class="breaker-label">Navigation Lights</span>
+                <span class="rating">10A</span>
+                <span class="breaker-status">CLOSED</span>
+            </div>
+
+            <div class="breaker closed">
+                <span class="breaker-label">Avionics Bus</span>
+                <span class="rating">20A</span>
+                <span class="breaker-status">CLOSED</span>
+            </div>
+
+            <div class="breaker tripped">
+                <span class="breaker-label">Landing Lights</span>
+                <span class="rating">15A</span>
+                <span class="breaker-status">TRIPPED</span>
+            </div>
+
+            <div class="breaker closed">
+                <span class="breaker-label">Fuel Pump</span>
+                <span class="rating">5A</span>
+                <span class="breaker-status">CLOSED</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weather Item Hover Tests -->
+    <section class="test-section">
+        <h2>6. Weather Item Hover States</h2>
+        <div class="test-description">
+            <strong>Expected Behavior:</strong> Weather items should lift 1px with subtle teal border and shadow on hover.
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="weather-item">
+                <i data-lucide="thermometer" class="weather-icon"></i>
+                <div class="weather-data">
+                    <label>Temperature</label>
+                    <span class="weather-value">22°C</span>
+                </div>
+            </div>
+
+            <div class="weather-item">
+                <i data-lucide="droplets" class="weather-icon"></i>
+                <div class="weather-data">
+                    <label>Humidity</label>
+                    <span class="weather-value">65%</span>
+                </div>
+            </div>
+
+            <div class="weather-item">
+                <i data-lucide="wind" class="weather-icon"></i>
+                <div class="weather-data">
+                    <label>Wind Speed</label>
+                    <span class="weather-value">12 kts</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testing Instructions -->
+    <section class="test-section">
+        <h2>Testing Checklist</h2>
+        <div style="color: var(--text-secondary); line-height: 1.8;">
+            <h3 style="color: var(--accent-primary); font-size: 1rem; margin-bottom: 1rem;">Manual Testing</h3>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> All cards lift smoothly on hover (no jank)
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Teal border glow appears on card hover
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Gauges scale and enhance blur on hover
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Buttons show brightness increase on hover
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Buttons scale down on active/click
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Inputs show teal glow ring on focus
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Inputs lift slightly on focus (1px)
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Circuit breakers show enhanced glow on hover
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Weather items have subtle hover effect
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Performance monitor shows 60 FPS consistently
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> No layout shift during hover animations
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="checkbox"> Hover states don't trigger on mobile/touch devices
+            </label>
+        </div>
+    </section>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Simple gauge rendering for testing
+        function createTestGauge(canvasId, value, max = 30) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 55;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Background arc
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0.75 * Math.PI, 2.25 * Math.PI);
+            ctx.strokeStyle = 'rgba(51, 65, 85, 0.3)';
+            ctx.lineWidth = 10;
+            ctx.stroke();
+
+            // Value arc
+            const angle = 0.75 * Math.PI + (value / max) * 1.5 * Math.PI;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0.75 * Math.PI, angle);
+            ctx.strokeStyle = '#4ecdc4';
+            ctx.lineWidth = 10;
+            ctx.stroke();
+        }
+
+        // Create test gauges
+        createTestGauge('testGauge1', 24.5, 30);
+        createTestGauge('testGauge2', 14.2, 15);
+        createTestGauge('testGauge3', 28.8, 30);
+
+        // Performance monitoring
+        let lastTime = performance.now();
+        let frames = 0;
+        let fps = 60;
+
+        function updatePerformance() {
+            const currentTime = performance.now();
+            frames++;
+
+            if (currentTime >= lastTime + 1000) {
+                fps = Math.round(frames * 1000 / (currentTime - lastTime));
+                frames = 0;
+                lastTime = currentTime;
+
+                const frameTime = Math.round(1000 / fps);
+
+                // Update UI
+                const fpsValue = document.getElementById('fpsValue');
+                const frameTimeEl = document.getElementById('frameTime');
+                const perfStatus = document.getElementById('perfStatus');
+
+                fpsValue.textContent = fps;
+                frameTimeEl.textContent = frameTime + 'ms';
+
+                // Color coding
+                fpsValue.className = 'perf-value ' + (fps >= 55 ? 'good' : fps >= 40 ? 'warning' : 'critical');
+                frameTimeEl.className = 'perf-value ' + (frameTime <= 20 ? 'good' : frameTime <= 30 ? 'warning' : 'critical');
+
+                if (fps >= 55) {
+                    perfStatus.textContent = 'Smooth';
+                    perfStatus.className = 'perf-value good';
+                } else if (fps >= 40) {
+                    perfStatus.textContent = 'Minor Jank';
+                    perfStatus.className = 'perf-value warning';
+                } else {
+                    perfStatus.textContent = 'Janky';
+                    perfStatus.className = 'perf-value critical';
+                }
+            }
+
+            requestAnimationFrame(updatePerformance);
+        }
+
+        // Start performance monitoring
+        requestAnimationFrame(updatePerformance);
+
+        // Console log for testing
+        console.log('Hover States Testing Tool Loaded');
+        console.log('Test all interactive elements and verify smooth 60fps performance');
+        console.log('Check that @media (hover: hover) prevents hover states on touch devices');
+    </script>
+</body>
+</html>
